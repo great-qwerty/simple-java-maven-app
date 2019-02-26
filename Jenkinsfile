@@ -24,6 +24,9 @@ pipeline {
             agent {
                 label "maven-slave"
             }
+            options {
+                skipDefaultCheckout true
+            }
             steps {
                 unstash name: "sources"
                 sh "mvn clean install"
