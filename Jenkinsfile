@@ -29,7 +29,10 @@ pipeline {
             }
             steps {
                 unstash name: "sources"
-                sh "mvn clean install"
+                configFileProvider([configFile(fileId: '6bbd8f57-047c-47ea-8255-3e69733a2508', variable: 'MAVEN_SETTINGS_XML')]) {
+                    sh 'mvn clean install'
+                    sh 'mvn -s $MAVEN_SETTINGS_XML sonar:sonar'
+                }
             }
         }
     }
