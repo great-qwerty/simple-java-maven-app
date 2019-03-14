@@ -36,9 +36,12 @@ pipeline {
             }
             steps {
                 unstash name: "sources"
-                configFileProvider([configFile(fileId: '6bbd8f57-047c-47ea-8255-3e69733a2508', variable: 'MAVEN_SETTINGS_XML')]) {
-                    sh 'mvn clean install'
-                    sh 'mvn -s $MAVEN_SETTINGS_XML sonar:sonar'
+                withSonarQubeEnv('default') {
+                    sh 'mvn clean install sonar:sonar'
+                }
+                sleep(10)
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
